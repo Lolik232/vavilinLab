@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class CreditAccountServiceImpl implements CreditAccountService {
 
@@ -31,7 +32,7 @@ public class CreditAccountServiceImpl implements CreditAccountService {
                                              double loanAmount, double interestRate, Employee employee,
                                              PaymentAccount paymentAccount) {
         CreditAccount creditAccount = new CreditAccount(user, bank, startDate, loanTermMonths,
-                interestRate, employee, paymentAccount);
+                                                        interestRate, employee, paymentAccount);
         creditAccount.setId(creditAccountsCount++);
         creditAccount.setEndDate(calculateEndDate(startDate, loanTermMonths));
         creditAccount.setLoanAmount(calculateLoanAmount(loanAmount, bank));
@@ -57,9 +58,11 @@ public class CreditAccountServiceImpl implements CreditAccountService {
         }
         return loanAmount;
     }
+
     private double calculateInterestRate(double interestRate, Bank bank) {
         if (interestRate > bank.getInterestRate()) {
-            System.out.println("Заданная процентная ставка превышает процентную ставку банка. Ставка будет скорректирована.");
+            System.out.println(
+                    "Заданная процентная ставка превышает процентную ставку банка. Ставка будет скорректирована.");
             interestRate = bank.getInterestRate();
         }
         return interestRate;
@@ -69,6 +72,13 @@ public class CreditAccountServiceImpl implements CreditAccountService {
         return creditAccounts.stream()
                 .filter(creditAccount -> creditAccount.getId() == id)
                 .findFirst();
+    }
+
+    @Override
+    public List<CreditAccount> getCreditAccountByUserId(int userId) {
+        return creditAccounts.stream()
+                .filter(account -> account.getUser().getId() == userId)
+                .collect(Collectors.toList());
     }
 
     public List<CreditAccount> getAllCreditAccounts() {

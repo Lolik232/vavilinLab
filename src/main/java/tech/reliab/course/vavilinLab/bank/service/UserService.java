@@ -34,4 +34,6 @@ public interface UserService {
     void deletePaymentAccount(PaymentAccount paymentAccount, User user);
 
     void deleteBank(Bank bank);
+
+    List<User> getUsersByBank(Bank bank);
 }

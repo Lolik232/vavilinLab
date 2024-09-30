@@ -1,6 +1,7 @@
 package tech.reliab.course.vavilinLab.bank.service;
 
 import tech.reliab.course.vavilinLab.bank.entity.Bank;
+import tech.reliab.course.vavilinLab.bank.entity.BankAtm;
 import tech.reliab.course.vavilinLab.bank.entity.BankOffice;
 import tech.reliab.course.vavilinLab.bank.entity.Employee;
 
@@ -16,6 +17,7 @@ public interface EmployeeService {
     Optional<Employee> getEmployeeById(int id);
 
     List<Employee> getAllEmployees();
+    List<Employee> getAllEmployeesByBank(Bank bank);
 
     void updateEmployee(int id, String name);
 

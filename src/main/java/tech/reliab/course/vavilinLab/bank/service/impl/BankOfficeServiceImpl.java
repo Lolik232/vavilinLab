@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class BankOfficeServiceImpl implements BankOfficeService {
 
@@ -51,6 +52,13 @@ public class BankOfficeServiceImpl implements BankOfficeService {
 
     public List<BankOffice> getAllBankOffices() {
         return new ArrayList<>(bankOffices);
+    }
+
+    @Override
+    public List<BankOffice> getAllBankOfficesByBank(Bank bank) {
+        return bankOffices.stream()
+                .filter(bankOffice -> bankOffice.getBankId() == bank.getId())
+                .collect(Collectors.toList());
     }
 
     public void updateBankOffice(int id, String name) {

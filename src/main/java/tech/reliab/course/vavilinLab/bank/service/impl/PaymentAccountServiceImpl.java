@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class PaymentAccountServiceImpl implements PaymentAccountService {
 
@@ -21,7 +22,7 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
 
     private final List<PaymentAccount> paymentAccounts = new ArrayList<>();
 
-    public PaymentAccountServiceImpl (UserService userService, BankService bankService) {
+    public PaymentAccountServiceImpl(UserService userService, BankService bankService) {
         this.userService = userService;
         this.bankService = bankService;
     }
@@ -44,6 +45,13 @@ public class PaymentAccountServiceImpl implements PaymentAccountService {
 
     public List<PaymentAccount> getAllPaymentAccounts() {
         return new ArrayList<>(paymentAccounts);
+    }
+
+    @Override
+    public List<PaymentAccount> getAllPaymentAccountsByUserId(int userId) {
+        return paymentAccounts.stream()
+                .filter(account -> account.getUser().getId() == userId)
+                .collect(Collectors.toList());
     }
 
     public void updatePaymentAccount(int id, Bank bank) {

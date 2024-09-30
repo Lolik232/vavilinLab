@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BankAtmService {
-    BankAtm createBankAtm(String name, String address, Bank bank, BankOffice location, Employee employee,
+    BankAtm createBankAtm(String name,
+                          String address, Bank bank, BankOffice location, Employee employee,
                           boolean cashWithdrawal, boolean cashDeposit, double maintenanceCost);
 
     Optional<BankAtm> getBankAtmById(int id);

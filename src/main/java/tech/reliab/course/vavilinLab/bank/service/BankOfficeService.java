@@ -1,6 +1,7 @@
 package tech.reliab.course.vavilinLab.bank.service;
 
 import tech.reliab.course.vavilinLab.bank.entity.Bank;
+import tech.reliab.course.vavilinLab.bank.entity.BankAtm;
 import tech.reliab.course.vavilinLab.bank.entity.BankOffice;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface BankOfficeService {
     Optional<BankOffice> getBankOfficeById(int id);
 
     List<BankOffice> getAllBankOffices();
+
+    List<BankOffice>  getAllBankOfficesByBank(Bank bank);
 
     void updateBankOffice(int id, String name);
 

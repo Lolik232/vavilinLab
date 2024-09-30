@@ -18,6 +18,8 @@ public interface CreditAccountService {
 
     Optional<CreditAccount> getCreditAccountById(int id);
 
+    List<CreditAccount> getCreditAccountByUserId(int userId);
+
     List<CreditAccount> getAllCreditAccounts();
 
     void updateCreditAccount(int id, Bank bank);

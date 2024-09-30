@@ -14,6 +14,7 @@ public interface PaymentAccountService {
     Optional<PaymentAccount> getPaymentAccountById(int id);
 
     List<PaymentAccount> getAllPaymentAccounts();
+    List<PaymentAccount> getAllPaymentAccountsByUserId(int userId);
 
     void updatePaymentAccount(int id, Bank bank);
 

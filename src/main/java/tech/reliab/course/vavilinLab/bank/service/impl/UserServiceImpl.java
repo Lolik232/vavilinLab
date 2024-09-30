@@ -99,10 +99,20 @@ public class UserServiceImpl implements UserService {
     }
 
     public void deleteBank(Bank bank) {
-        for(User curUser: users) {
+        for (User curUser : users) {
             List<Bank> banks = curUser.getBanks();
             banks.remove(bank);
             curUser.setBanks(banks);
         }
+    }
+
+    @Override
+    public List<User> getUsersByBank(Bank bank) {
+        return users.stream()
+                .filter(user ->
+                                user.getBanks()
+                                        .stream()
+                                        .anyMatch((Bank userBank) -> userBank.getId() == bank.getId())).toList();
+
     }
 }

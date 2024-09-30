@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -24,10 +25,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.bankService = bankService;
     }
 
-    public Employee createEmployee(String fullName, LocalDate birthDate, String position, Bank bank, boolean remoteWork,
-                                   BankOffice bankOffice, boolean canIssueLoans, double salary) {
-        Employee employee = new Employee(fullName, birthDate, position, bank, remoteWork,
-                bankOffice, canIssueLoans, salary);
+    public Employee createEmployee(String fullName,
+                                   LocalDate birthDate,
+                                   String position,
+                                   Bank bank,
+                                   boolean remoteWork,
+                                   BankOffice bankOffice,
+                                   boolean canIssueLoans,
+                                   double salary) {
+
+        Employee employee = new Employee(fullName,
+                                         birthDate,
+                                         position,
+                                         bank,
+                                         remoteWork,
+                                         bankOffice,
+                                         canIssueLoans,
+                                         salary);
+
         employee.setId(employeesCount++);
         employees.add(employee);
         bankService.addEmployee(bank.getId());
@@ -35,13 +50,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public Optional<Employee> getEmployeeById(int id) {
-        return employees.stream()
-                .filter(employee -> employee.getId() == id)
-                .findFirst();
+        return employees.stream().filter(employee -> employee.getId() == id).findFirst();
     }
 
     public List<Employee> getAllEmployees() {
         return new ArrayList<>(employees);
+    }
+
+    @Override
+    public List<Employee> getAllEmployeesByBank(Bank bank) {
+        return employees.stream()
+                .filter(employee -> employee.getBank().getId() == bank.getId())
+                .collect(Collectors.toList());
     }
 
     public void updateEmployee(int id, String name) {

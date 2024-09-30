@@ -14,7 +14,7 @@ public class BankBuilder {
     private static final double DIVIDER = 10.0;
 
     private int generateId() {
-        return new Random().nextInt();
+        return new Random().nextInt(Integer.MAX_VALUE);
     }
 
     private int generateRating() {
