@@ -57,13 +57,8 @@ public class VavilinLabApplication {
 
         var option = scanner.nextInt();
 
-        if (option == 1) {
-            handleBankOut();
-        }
-
-        if (option == 2) {
-            handleUserInfoOut();
-        }
+        if (option == 1) handleBankOut();
+        if (option == 2) handleUserInfoOut();
     }
 
 
