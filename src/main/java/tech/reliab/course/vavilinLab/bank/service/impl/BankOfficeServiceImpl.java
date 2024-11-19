@@ -1,82 +1,95 @@
 package tech.reliab.course.vavilinLab.bank.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import tech.reliab.course.vavilinLab.bank.entity.Bank;
 import tech.reliab.course.vavilinLab.bank.entity.BankOffice;
 import tech.reliab.course.vavilinLab.bank.entity.BankOfficeStatus;
+import tech.reliab.course.vavilinLab.bank.model.BankOfficeRequest;
+import tech.reliab.course.vavilinLab.bank.repository.BankOfficeRepository;
 import tech.reliab.course.vavilinLab.bank.service.BankOfficeService;
 import tech.reliab.course.vavilinLab.bank.service.BankService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class BankOfficeServiceImpl implements BankOfficeService {
 
-    private static int bankOfficesCount = 0;
-
-    private List<BankOffice> bankOffices = new ArrayList<>();
-
+    private final BankOfficeRepository bankOfficeRepository;
     private final BankService bankService;
 
-    public BankOfficeServiceImpl(BankService bankService) {
-        this.bankService = bankService;
-    }
-
-    public BankOffice createBankOffice(String name, String address, boolean canPlaceAtm,
-                                       boolean canIssueLoan, boolean cashWithdrawal, boolean cashDeposit,
-                                       double rentCost, Bank bank) {
-        BankOffice bankOffice = new BankOffice(name, address, canPlaceAtm, canIssueLoan,
-                cashWithdrawal, cashDeposit, rentCost, bank);
-        bankOffice.setId(bankOfficesCount++);
-        bankOffice.setStatus(generateStatus());
+    /**
+     * Создание нового офиса банка.
+     *
+     * @param bankOfficeRequest содержит данные про офис
+     * @return Созданный офис банка.
+     */
+    public BankOffice createBankOffice(BankOfficeRequest bankOfficeRequest) {
+        Bank bank = bankService.getBankById(bankOfficeRequest.getBankId());
+        BankOffice bankOffice = new BankOffice(bankOfficeRequest.getName(), bankOfficeRequest.getAddress(),
+                                               bankOfficeRequest.isCanPlaceAtm(), bankOfficeRequest.isCanIssueLoan(),
+                                               bankOfficeRequest.isCashWithdrawal(), bankOfficeRequest.isCashDeposit(),
+                                               bankOfficeRequest.getRentCost(), bank);
+        bankOffice.setStatus(BankOfficeStatus.randomStatus());
         bankOffice.setOfficeMoney(generateOfficeMoney(bank));
-        bankOffices.add(bankOffice);
-        bankService.addOffice(bank.getId());
-        return bankOffice;
+        return bankOfficeRepository.save(bankOffice);
     }
 
-
-    private BankOfficeStatus generateStatus() {
-        return BankOfficeStatus.randomStatus();
-    }
-
-
-    public Optional<BankOffice> getBankOfficeById(int id) {
-        return bankOffices.stream()
-                .filter(bankOffice -> bankOffice.getId() == id)
-                .findFirst();
-    }
-
-    public List<BankOffice> getAllBankOffices() {
-        return new ArrayList<>(bankOffices);
-    }
-
-    @Override
-    public List<BankOffice> getAllBankOfficesByBank(Bank bank) {
-        return bankOffices.stream()
-                .filter(bankOffice -> bankOffice.getBankId() == bank.getId())
-                .collect(Collectors.toList());
-    }
-
-    public void updateBankOffice(int id, String name) {
-        BankOffice bankOffice = getBankOfficeIfExists(id);
-        bankOffice.setName(name);
-    }
-
-    public void deleteBankAtm(int officeId, int bankId) {
-        BankOffice bankOffice = getBankOfficeIfExists(officeId);
-        bankOffices.remove(bankOffice);
-        bankService.removeOffice(bankId);
-    }
-
-    private BankOffice getBankOfficeIfExists(int id) {
-        return getBankOfficeById(id).orElseThrow(() -> new NoSuchElementException("BankOffice was not found"));
-    }
-
+    /**
+     * Генерация случайного количества денег в офисе банка.
+     *
+     * @param bank Банк, которому принадлежит офис.
+     * @return Случайное количество денег в офисе банка.
+     */
     private double generateOfficeMoney(Bank bank) {
         return new Random().nextDouble(bank.getTotalMoney());
+    }
+
+    /**
+     * Поиск офиса банка по его идентификатору.
+     *
+     * @param id Идентификатор офиса банка.
+     * @return Офис банка, если он найден
+     * @throws NoSuchElementException Если офис не найден.
+     */
+    public BankOffice getBankOfficeById(int id) {
+        return bankOfficeRepository.findById(id).orElseThrow(() -> new NoSuchElementException("BankOffice was not found"));
+    }
+
+    public BankOffice getBankDtoOfficeById(int id) {
+        return getBankOfficeById(id);
+    }
+
+    /**
+     * Чтение всех офисов банка.
+     *
+     * @return Список всех офисов банка.
+     */
+    public List<BankOffice> getAllBankOffices() {
+        return bankOfficeRepository.findAll();
+    }
+
+    /**
+     * Обновление информации об офисе банка по его идентификатору.
+     *
+     * @param id   Идентификатор офиса банка.
+     * @param name Новое название офиса банка.
+     */
+    public BankOffice updateBankOffice(int id, String name) {
+        BankOffice bankOffice = getBankOfficeById(id);
+        bankOffice.setName(name);
+        return bankOfficeRepository.save(bankOffice);
+    }
+
+    /**
+     * Удаление офиса банка по его идентификатору
+     *
+     * @param id Идентификатор офиса банка.
+     */
+    public void deleteBankAtm(int id) {
+        bankOfficeRepository.deleteById(id);
     }
 }

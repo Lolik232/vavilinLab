@@ -1,22 +1,21 @@
 package tech.reliab.course.vavilinLab.bank.service;
 
-import tech.reliab.course.vavilinLab.bank.entity.Bank;
 import tech.reliab.course.vavilinLab.bank.entity.PaymentAccount;
-import tech.reliab.course.vavilinLab.bank.entity.User;
+import tech.reliab.course.vavilinLab.bank.model.PaymentAccountRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PaymentAccountService {
 
-    PaymentAccount createPaymentAccount(User user, Bank bank);
+    PaymentAccount createPaymentAccount(PaymentAccountRequest paymentAccountRequest);
 
-    Optional<PaymentAccount> getPaymentAccountById(int id);
+    PaymentAccount getPaymentAccountById(int id);
+
+    PaymentAccount getPaymentAccountDtoById(int id);
 
     List<PaymentAccount> getAllPaymentAccounts();
-    List<PaymentAccount> getAllPaymentAccountsByUserId(int userId);
 
-    void updatePaymentAccount(int id, Bank bank);
+    PaymentAccount updatePaymentAccount(int id, int bankId);
 
     void deletePaymentAccount(int id);
 }

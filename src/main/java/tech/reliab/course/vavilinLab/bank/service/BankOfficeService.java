@@ -1,25 +1,21 @@
 package tech.reliab.course.vavilinLab.bank.service;
 
-import tech.reliab.course.vavilinLab.bank.entity.Bank;
-import tech.reliab.course.vavilinLab.bank.entity.BankAtm;
 import tech.reliab.course.vavilinLab.bank.entity.BankOffice;
+import tech.reliab.course.vavilinLab.bank.model.BankOfficeRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BankOfficeService {
 
-    BankOffice createBankOffice(String name, String address, boolean canPlaceAtm,
-                                boolean canIssueLoan, boolean cashWithdrawal, boolean cashDeposit,
-                                double rentCost, Bank bank);
+    BankOffice createBankOffice(BankOfficeRequest bankOfficeRequest);
 
-    Optional<BankOffice> getBankOfficeById(int id);
+    BankOffice getBankOfficeById(int id);
+
+    BankOffice getBankDtoOfficeById(int id);
 
     List<BankOffice> getAllBankOffices();
 
-    List<BankOffice>  getAllBankOfficesByBank(Bank bank);
+    BankOffice updateBankOffice(int id, String name);
 
-    void updateBankOffice(int id, String name);
-
-    void deleteBankAtm(int officeId, int bankId);
+    void deleteBankAtm(int id);
 }
